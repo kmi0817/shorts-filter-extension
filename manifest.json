@@ -1,0 +1,16 @@
+{
+	"manifest_version": 3,
+	"name": "Shorts Filter",
+	"version": "1.0.0",
+	"description": "You can pass shorts that include keywords you registered automatically",
+	"icons": {
+		"16": "assets/icon_16.png",
+		"32": "assets/icon_32.png",
+		"48": "assets/icon_48.png",
+		"128": "assets/icon_128.png"
+	},
+	"action": {
+		"default_icon": "assets/icon_32.png",
+		"default_title": "Shorts Filter"
+	}
+}
