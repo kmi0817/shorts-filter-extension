@@ -13,5 +13,6 @@
 		"default_icon": "assets/icon_32.png",
 		"default_title": "Shorts Filter",
 		"default_popup": "popup.html"
-	}
+	},
+	"permissions": ["activeTab"]
 }

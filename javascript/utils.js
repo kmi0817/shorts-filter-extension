@@ -18,3 +18,8 @@ export const addClickEventOnDeleteBtn = (list, node) => {
 		list.removeChild(node);
 	});
 };
+
+export const getCurrentURL = async () => {
+	const [tab] = await chrome.tabs.query({ active: true });
+	return tab.url ?? '';
+};

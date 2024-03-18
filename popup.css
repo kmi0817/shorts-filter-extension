@@ -50,6 +50,11 @@ form {
 	background: #436850;
 }
 
+#register-btn:disabled {
+	cursor: not-allowed;
+	background: #12372a;
+}
+
 #keyword-list {
 	width: 280px;
 	padding: 0 0.5rem;

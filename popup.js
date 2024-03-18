@@ -1,18 +1,29 @@
-import { createKeywordNode, addClickEventOnDeleteBtn } from './javascript/utils.js';
+import { createKeywordNode, addClickEventOnDeleteBtn, getCurrentURL } from './javascript/utils.js';
 
-const keywordList = document.querySelector('#keyword-list');
-const form = document.querySelector('form');
-const registerBtn = form.querySelector('#register-btn');
+document.addEventListener('DOMContentLoaded', async () => {
+	const currentURL = await getCurrentURL();
+	const form = document.querySelector('form');
+	const registerBtn = form.querySelector('#register-btn');
 
-registerBtn.addEventListener('click', () => {
-	const keywordInput = form.querySelector('#input-keyword');
-	const keyword = keywordInput.value;
+	if (!currentURL.includes('youtube.com/shorts')) {
+		const keywordInput = form.querySelector('#input-keyword');
+		keywordInput.value = 'Unavailable in this page';
+		keywordInput.disabled = true;
+		registerBtn.disabled = true;
+	} else {
+		registerBtn.addEventListener('click', () => {
+			const keywordList = document.querySelector('#keyword-list');
 
-	if (!!keyword) {
-		const node = createKeywordNode(keyword);
-		keywordList.insertAdjacentElement('beforeend', node);
-		addClickEventOnDeleteBtn(keywordList, node);
+			const keywordInput = form.querySelector('#input-keyword');
+			const keyword = keywordInput.value;
+
+			if (!!keyword) {
+				const node = createKeywordNode(keyword);
+				keywordList.insertAdjacentElement('beforeend', node);
+				addClickEventOnDeleteBtn(keywordList, node);
+			}
+
+			keywordInput.value = '';
+		});
 	}
-
-	keywordInput.value = '';
 });
