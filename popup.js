@@ -1,9 +1,5 @@
-const fetchData = () => {
-	return new Promise((resolve) => {
-		chrome.storage.sync.get(['keywords'], (result) => {
-			resolve(result['keywords'] ?? []);
-		});
-	});
+const fetchData = async () => {
+	return (await chrome.storage.sync.get('keywords')).keywords ?? [];
 };
 
 const getCurrentTab = async () => {
@@ -53,32 +49,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 	} else {
 		const keywordList = document.querySelector('#keyword-list');
 
-		const keywords = await fetchData();
+		let keywords = await fetchData();
 		keywords.forEach((word) => {
 			appendKeywordNode(keywordList, word);
 		});
 
 		registerBtn.addEventListener('click', () => {
 			const keywordInput = form.querySelector('#input-keyword');
-			const keyword = keywordInput.value;
+			const keyword = keywordInput.value.trim();
 
 			if (!!keyword) {
-				chrome.tabs.sendMessage(
-					currentTab.id,
-					{
+				const isDuplicated = keywords.some((word) => word === keyword);
+
+				if (!isDuplicated) {
+					keywords = [keyword, ...keywords];
+					appendKeywordNode(keywordList, keyword);
+					chrome.tabs.sendMessage(currentTab.id, {
 						type: 'register',
 						keyword,
-					},
-					(response) => {
-						const { statusCode } = response;
-
-						if (statusCode == 201) {
-							appendKeywordNode(keywordList, keyword);
-						} else {
-							console.log(`** ${keyword} not registered`);
-						}
-					}
-				);
+					});
+				}
 			}
 
 			keywordInput.value = '';
