@@ -23,8 +23,14 @@ const createKeywordNode = (keyword) => {
 
 const addClickEventOnDeleteBtn = (list, node) => {
 	const deleteBtn = node.querySelector('.delete-btn');
-	deleteBtn.addEventListener('click', () => {
+	deleteBtn.addEventListener('click', async () => {
 		list.removeChild(node);
+
+		const currentTab = await getCurrentTab();
+		chrome.tabs.sendMessage(currentTab.id, {
+			type: 'remove',
+			keyword: node.querySelector('span').value,
+		});
 	});
 };
 
