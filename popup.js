@@ -1,6 +1,14 @@
-const getCurrentURL = async () => {
-	const [tab] = await chrome.tabs.query({ active: true });
-	return tab.url ?? '';
+const fetchData = () => {
+	return new Promise((resolve) => {
+		chrome.storage.sync.get(['keywords'], (result) => {
+			resolve(result['keywords'] ?? []);
+		});
+	});
+};
+
+const getCurrentTab = async () => {
+	const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+	return tab;
 };
 
 const createKeywordNode = (keyword) => {
@@ -31,7 +39,9 @@ const appendKeywordNode = (list, keyword) => {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-	const currentURL = await getCurrentURL();
+	const currentTab = await getCurrentTab();
+	const currentURL = currentTab.url;
+
 	const form = document.querySelector('form');
 	const registerBtn = form.querySelector('#register-btn');
 
@@ -41,14 +51,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 		keywordInput.disabled = true;
 		registerBtn.disabled = true;
 	} else {
-		registerBtn.addEventListener('click', () => {
-			const keywordList = document.querySelector('#keyword-list');
+		const keywordList = document.querySelector('#keyword-list');
 
+		const keywords = await fetchData();
+		keywords.forEach((word) => {
+			appendKeywordNode(keywordList, word);
+		});
+
+		registerBtn.addEventListener('click', () => {
 			const keywordInput = form.querySelector('#input-keyword');
 			const keyword = keywordInput.value;
 
 			if (!!keyword) {
-				appendKeywordNode(keywordList, keyword);
+				chrome.tabs.sendMessage(
+					currentTab.id,
+					{
+						type: 'register',
+						keyword,
+					},
+					(response) => {
+						const { statusCode } = response;
+
+						if (statusCode == 201) {
+							appendKeywordNode(keywordList, keyword);
+						} else {
+							console.log(`** ${keyword} not registered`);
+						}
+					}
+				);
 			}
 
 			keywordInput.value = '';

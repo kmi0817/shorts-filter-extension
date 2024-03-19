@@ -14,5 +14,12 @@
 		"default_title": "Shorts Filter",
 		"default_popup": "popup.html"
 	},
-	"permissions": ["activeTab"]
+	"permissions": ["activeTab", "tabs", "storage"],
+	"host_permissions": ["https://*.youtube.com/shorts/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://*.youtube.com/shorts/*"],
+			"js": ["javascript/contentScript.js"]
+		}
+	]
 }
