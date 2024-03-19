@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	} else {
 		const keywordList = document.querySelector('#keyword-list');
 
-		const keywords = await fetchData();
+		let keywords = await fetchData();
 		keywords.forEach((word) => {
 			appendKeywordNode(keywordList, word);
 		});
