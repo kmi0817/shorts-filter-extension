@@ -4,7 +4,7 @@ const fetchData = async () => {
 
 const register = async (keyword) => {
 	const keywords = await fetchData();
-	chrome.storage.sync.set({ keywords: [keyword, ...keywords] });
+	chrome.storage.sync.set({ keywords: [...keywords, keyword] });
 };
 
 chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {

@@ -30,7 +30,7 @@ const addClickEventOnDeleteBtn = (list, node) => {
 
 const appendKeywordNode = (list, keyword) => {
 	const node = createKeywordNode(keyword);
-	list.insertAdjacentElement('beforeend', node);
+	list.insertAdjacentElement('afterbegin', node);
 	addClickEventOnDeleteBtn(list, node);
 };
 
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	} else {
 		const keywordList = document.querySelector('#keyword-list');
 
-		let keywords = await fetchData();
+		const keywords = await fetchData();
 		keywords.forEach((word) => {
 			appendKeywordNode(keywordList, word);
 		});
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 				const isDuplicated = keywords.some((word) => word === keyword);
 
 				if (!isDuplicated) {
-					keywords = [keyword, ...keywords];
+					keywords = [...keywords, keyword];
 					appendKeywordNode(keywordList, keyword);
 					chrome.tabs.sendMessage(currentTab.id, {
 						type: 'register',
