@@ -8,6 +8,10 @@
 4. [popup에서 입력한 키워드를 contentScript에 전달](#4-popup에서-입력한-키워드를-contentscript에-전달)
 5. [popup에서 등록한 키워드를 Chrome Storage에 저장](#5-popup에서-등록한-키워드를-chrome-storage에-저장)
 6. [popup에서 삭제한 키워드를 Chrome Storage에서 삭제](#6-popup에서-삭제한-키워드를-chrome-storage에서-삭제)
+7. [유튜브 태그가 인식되지 않는 문제 발생](#7-유튜브-태그가-인식되지-않는-문제-발생)
+8. [개발 중단... => 새로운 익스텐션을 만들자](#8-개발-중단--새로운-익스텐션을-만들자)
+
+- [이슈](#이슈)
 
 ## 1. Shorts HTML 구조 파악
 
@@ -337,6 +341,28 @@ const remove = async (keyword) => {
 	chrome.storage.sync.set({ keywords: keywords });
 };
 ```
+
+## 7. 유튜브 태그가 인식되지 않는 문제 발생
+
+```javascript
+const pageManager = document.querySelector('#page-manager');
+console.log(pageManager);
+console.log(pageManager.childNodes);
+console.log(pageManager.childNodes.length);
+console.log(pageManager.childNodes[3]);
+const shortsContainer = pageManager.querySelector('#shorts-container');
+console.log(shortsContainer);
+```
+
+![image](https://gist.github.com/assets/62174395/c241ded1-06db-4138-9ae8-e2c6637293e5)
+
+아주 난감하다. [Shorts HTML 구조 파악](#1-shorts-html-구조-파악)에서 알아낸 내용을 전혀 사용할 수가 없다. 크롬 개발자 도구에선 가능했지만, 자바스크립트로 접근하려니까 되지 않는다.
+
+위 캡처본에서 NodeList의 3번째 원소인 `ytd-shorts` 노드 안에 `#shorts-container`가 있고, 그 안에 쇼츠들이 정렬되어 있다. 그래서 현재 쇼츠 (`is-active`)가 무엇인지 파악하고, 이곳에 필터링 키워드가 포함되어 있는지 확인한 다음에 다음 쇼츠로 넘어가야 한다. 그런데 태그를 가져올 수가 없다. 어떡하지?
+
+## 8. 개발 중단... => 새로운 익스텐션을 만들자.
+
+... 이것 대신 다른 익스텐션을 만들기로 했다. 쇼츠를 키워드 필터링하는 익스텐션 말고도, N회 이상 쇼츠를 감상하면 더 이상 쇼츠를 보지 못하도록 막는 익스텐션도 만들고 싶었다. 상황이 여의치 않으니, N회 이상 쇼츠 시청 차단 익스텐션을 만들어보겠다!
 
 ## 이슈
 
