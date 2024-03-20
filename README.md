@@ -1,6 +1,9 @@
-# 개발 과정
+# Shorts Filtering Extension
 
-## 목차
+> 해당 익스텐션은 DOM API로 쇼츠 태그에 접근할 수 없어 불가피하게 개발이 중단됐다. (2024-03-18 ~ 2024.03.21)
+> popup에서 키워드를 저장하고 삭제하면, Chrome Storage에도 반영되는 것까지 개발됐다. (필터링 기능 제외 전부가 구현됨)
+
+## 개발 과정 목차
 
 1. [Shorts HTML 구조 파악](#1-shorts-html-구조-파악)
 2. [popup 생성](#2-popup-생성)
