@@ -18,33 +18,38 @@
 
 ## 1. Shorts HTML 구조 파악
 
-![image](https://gist.github.com/assets/62174395/8a20bdde-b5e7-4cff-a8b1-f837ad3f013f)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/a7634165-7a66-4e03-9fe4-fd51bcc74fb9)
+
 
 처음 쇼츠를 재생하면, `#shorts-container` > `shorts-inner-container`의 자식 태그로 `ytd-reel-video-renderer` 10개가 생성된다. 이것이 바로 쇼츠들 목록이고, 9번째 쇼츠에 접근하면 추가로 10개의 자식 태그가 삽입되는 형태이다.
 
-![image](https://gist.github.com/assets/62174395/a70dd24a-9fa6-4e0a-983f-7b83847b67ae)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/00565ac7-0038-4173-9852-d1c7040da7fe)
+
 
 `ytd-reel-video-renderer` 태그 안에는 쇼츠 제목과 링크된 영상 제목 등의 정보가 포함된다. 각 태그를 자세히 보면 다음과 같다.
 
 - 제목: `<h2 class="title style-scope reel-player-header-renderer"></h2>`
 
-![image](https://gist.github.com/assets/62174395/edeb916d-3326-443a-bea7-7b9990e1da5e)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/39644287-012f-4a72-99ce-bf54a1747f71)
+
 
 - 링크된 영상 제목: `<div id="reel-multi-format-link-view-model" class="style-scope reel-player-header-renderer"></div>`
 
-![image](https://gist.github.com/assets/62174395/24178def-6702-4fee-a7fd-4703df11522f)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/1cc5acd1-f28d-4c80-98de-b18aed083847)
+
 
 이를 토대로 크롬 개발자 도구를 통해 실제 쇼츠 제목과 링크된 영상 제목에 접근해보자.
 
-![image](https://gist.github.com/assets/62174395/0f50ec52-ab50-47ba-afc1-737d5c313bdb)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/65ac5946-697d-4d9d-9324-98bd0ef4ef35)
+
 
 overlays라는 배열에 각 쇼츠들의 종합 정보를 담고, 1번 인덱스의 쇼츠 제목과 링크된 영상 제목을 알아내는 데 성공했다. 이 디버깅을 잘 기억하고, 자바스크립트 코드를 작성하면 되겠다.
 
 ## 2. popup 생성
 
-| 초기화면                                                                               | 키워드 등록                                                                            |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| ![image](https://gist.github.com/assets/62174395/38d854e3-9312-469e-9e85-589214c04ab7) | ![image](https://gist.github.com/assets/62174395/ac42a9d0-6eb9-4c71-ac61-00ad99d0c97c) |
+| 초기화면     | 키워드 등록    |
+| ------------ | -------------- |
+| ![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/0eccebcf-2735-4a93-857f-84baeac2077d) |![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/830d5f00-ceb8-4cbd-ac9f-2760a56d6e7e) |
 
 확장 프로그램 작업(툴바 아이콘)을 클릭하면 왼쪽 초기화면, 즉 팝업이 생성되고 키워드를 입력 후 `Register` 버튼을 클릭하면 하단 키워드 리스트에 추가된다.
 
@@ -124,7 +129,8 @@ popup에서 키워드 `example`을 입력하면, contentScript에 전달되고 �
 
 본격적으로 개발하기 전에, 일단 popup에서 입력한 내용을 contentScript에서 받아서 alert()로 출력하는 간단한 코드를 작성했다. 처음 개발하는 크롬 확장 프로그램이기 때문에 한 단계씩 진행하기 위함이다.
 
-![image](https://gist.github.com/assets/62174395/28ea470b-1057-4c8f-97cf-29f750a71e09)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/5ec6516c-e79e-435a-9f94-0f49edf49ba5)
+
 
 실행 결과는 성공적! 이제 제대로 개발해보자.
 
@@ -194,7 +200,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 });
 ```
 
-![image](https://gist.github.com/assets/62174395/557a9797-f642-42be-8478-eedaad3a3e81)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/252f17c2-1b4d-41b6-95bf-c36c4fb63fd1)
+
 
 popup에서 contentScript로 데이터도 잘 보내고, contentScript에서 popup으로 응답도 잘 전송한다! 그러나 이 상태론 팝업을 껐다가 다시 켰을 때, 기존에 등록한 키워드가 보이지 않을 것이다. 저장하기만 하고, popup에서 기존 데이터를 불러오는 과정이 아직 구현되지 않았기 때문이다.
 
@@ -357,7 +364,8 @@ const shortsContainer = pageManager.querySelector('#shorts-container');
 console.log(shortsContainer);
 ```
 
-![image](https://gist.github.com/assets/62174395/c241ded1-06db-4138-9ae8-e2c6637293e5)
+![image](https://github.com/kmi0817/shorts-filter-extension/assets/62174395/f55dd3b0-02c7-4c64-bd6a-a85dbfa9cb48)
+
 
 아주 난감하다. [Shorts HTML 구조 파악](#1-shorts-html-구조-파악)에서 알아낸 내용을 전혀 사용할 수가 없다. 크롬 개발자 도구에선 가능했지만, 자바스크립트로 접근하려니까 되지 않는다.
 
